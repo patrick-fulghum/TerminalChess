@@ -15,32 +15,57 @@ class Piece
     @color = color
     @moved = moved
   end
+
+  def on_board?(location)
+    location.all?{ |pos| pos.between?(0, 7) }
+  end
 end
-#
+
 module SmoothMovement
 
-  def terminus(starting_pos, direction)
-  end
-
   def legal_moves(directions)
-    return [] if directions == [0, 0]
+    x, y = position
     legal_moves = []
     directions.each do |direction|
-      @board
+      dx, dy = direction
+      iterant = 0
+      while true
+        iterant += 1
+        current_position = [x + i * dx, y + i * dy]
+        break unless on_board?(current_position)
+        if board.empty?(current_position)
+          legal_moves << current_position
+        else
+          if board[current_position].color != color
+            legal_moves << current_position
+          end
+          break
+        end
+      end
     end
+    legal_moves
   end
 end
 
 module JumpingMovement
 
   def legal_moves(directions)
+    x, y = position
+    legal_moves = []
+    directions.each do |direction|
+      dx, dy = direction
+      current_position = [x + dx, y + dy]
+      if board.empty?(current_position) || board[current_position].color != color
+        legal_moves << current_position
+      end
+    end
   end
 end
 
   class Rook < Piece
     include SmoothMovement
-    def initialize(board, position, color = nil, moved = false)
-      super(board, position, color)
+    def initialize(position, color = nil, moved = false)
+      super(position, color)
       @display_value = color == :white ? "\u2656" : "\u265C"
     end
 

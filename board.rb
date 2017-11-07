@@ -56,4 +56,8 @@ class Board
     rank, file = position
     @grid[rank][file] = piece
   end
+
+  def move(color, start, fin)
+    
+  end
 end
