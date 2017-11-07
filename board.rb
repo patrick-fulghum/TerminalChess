@@ -58,6 +58,21 @@ class Board
   end
 
   def move(color, start, fin)
-    
+    piece = self[start]
+    if color != piece.color
+      raise "Move your own piece"
+    if !piece.legal_moves.include?(fin)
+      raise "Illegal Move"
+    # if !piece.check?(fin)
+    #   raise "Cannot move into Check"
+    move!(start, fin)
+  end
+
+  def move!(start, fin)
+    piece = self[start]
+    self[fin] = piece
+    self[start] = NullPiece.instance
+    piece.moved, piece.position = true, fin
+    nil
   end
 end
