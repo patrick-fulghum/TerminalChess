@@ -7,7 +7,7 @@ class Board
 
   def initialize
     @grid = Array.new(8) { Array.new(8) }
-    %i(black, white).each do |color|
+    [:black, :white].each do |color|
       muster_pawns(color)
       muster_pieces(color)
     end
@@ -43,7 +43,7 @@ class Board
 
   def empty?(position)
     rank, file = position
-    self[[rank, file]] == NullPiece
+    self[[rank, file]].class == NullPiece
   end
 
   def [](position)
@@ -63,7 +63,7 @@ class Board
     if color != piece.color
       raise "Move your own piece"
     end
-    if !piece.legal_moves.include?(fin)
+    if !piece.moves.include?(fin)
       raise "Illegal Move"
     end
     # if !piece.check?(fin)

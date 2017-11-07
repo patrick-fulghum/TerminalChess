@@ -33,7 +33,7 @@ module SmoothMovement
       iterant = 0
       while true
         iterant += 1
-        current_position = [x + i * dx, y + i * dy]
+        current_position = [x + iterant * dx, y + iterant * dy]
         break unless on_board?(current_position)
         if board.empty?(current_position)
           legal_moves << current_position
@@ -57,10 +57,11 @@ module JumpingMovement
     directions.each do |direction|
       dx, dy = direction
       current_position = [x + dx, y + dy]
-      if board.empty?(current_position) || board[current_position].color != color
+      if on_board?(current_position) && (board.empty?(current_position) || board[current_position].color != color)
         legal_moves << current_position
       end
     end
+    legal_moves
   end
 end
 
@@ -129,7 +130,6 @@ class Pawn < Piece
   def initialize(board, position, color = nil, moved = false)
     super(board, position, color)
     @display_value = color == :white ? "\u2659" : "\u265F"
-    @x, @y = position
   end
 
   def advances
@@ -137,18 +137,22 @@ class Pawn < Piece
   end
 
   def attacks
-    [[@x + advances, @y - 1], [@x + advances, @y + 1]]
+    [[position[0] + advances, position[1] - 1], [position[0] + advances, position[1] + 1]]
   end
 
-  def legal_moves
+  def moves
     legal_moves = []
-    if board.empty?([@x + advances, @y])
-      legal_moves << [@x + advances, @y]
-      if moved == false && board.empty?([@x + advances * 2, @y])
-        legal_moves << [@x + advances * 2, @y]
+    if board.empty?([position[0] + advances, position[1]])
+      legal_moves << [position[0] + advances, position[1]]
+      if moved == false && board.empty?([position[0] + advances * 2, position[1]])
+        legal_moves << [position[0] + advances * 2, position[1]]
       end
     end
-    attacks.each { |pos| legal_moves << pos if board(pos).color != color }
+    attacks.each do |pos|
+      if on_board?(pos) && board[pos].color != color && !board.empty?(pos)
+        legal_moves << pos
+      end
+    end
     legal_moves
   end
 end
