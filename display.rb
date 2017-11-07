@@ -52,7 +52,3 @@ class Display
     puts "   0   1   2   3   4   5   6   7"
   end
 end
-
-my_board = Board.new
-d = Display.new(my_board)
-d.render
