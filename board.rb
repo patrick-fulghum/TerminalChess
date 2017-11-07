@@ -12,7 +12,6 @@ class Board
       muster_pieces(color)
     end
     muster_void
-    debugger
   end
 
   def muster_pawns(color)
