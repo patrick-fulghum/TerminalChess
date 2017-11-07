@@ -7,8 +7,8 @@ class Game
     @board = Board.new
     @display = Display.new(@board)
     @players = {
-      one: Human.new(@display, :white),
-      two: Human.new(@display, :black)
+      white: Human.new(@display, :white),
+      black: Human.new(@display, :black)
     }
     @current_player = :white
   end
@@ -16,12 +16,13 @@ class Game
   def play
     while true
       begin
-        start, fin = players[current_player].move(board)
-        board.move(current_player, start, fin)
+        start, fin = @players[@current_player].move(@board)
+        @board.move(@current_player, start, fin)
         swap
-      rescue StandardError => e
-        puts "Invalid Move, try again."
-        retry
+      # rescue StandardError => e
+      #   debugger
+      #   puts "Invalid Move, try again."
+      #   retry
       end
     end
 
@@ -35,6 +36,6 @@ class Game
   end
 end
 
-if $0 = __FILE__
+if $0 == __FILE__
   Game.new.play
 end

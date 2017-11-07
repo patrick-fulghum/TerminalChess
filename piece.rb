@@ -137,7 +137,7 @@ class Pawn < Piece
   end
 
   def attacks
-    [[@x + advances, y - 1], [@x + advances, y + 1]]
+    [[@x + advances, @y - 1], [@x + advances, @y + 1]]
   end
 
   def legal_moves

@@ -1,5 +1,5 @@
 require_relative 'player.rb'
-require 'display.rb'
+require_relative 'display.rb'
 require 'byebug'
 
 class Human < Player

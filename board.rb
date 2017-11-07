@@ -17,7 +17,7 @@ class Board
   def muster_pawns(color)
     rank = color == :white ? 6 : 1
     8.times do |file|
-      self[[rank, file]] = Pawn.new([rank, file], color, false)
+      self[[rank, file]] = Pawn.new(self, [rank, file], color, false)
     end
   end
 
@@ -25,7 +25,7 @@ class Board
     rank = color == :white ? 7 : 0
     back_rank = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
     back_rank.each_with_index do |piece, file|
-      self[[rank, file]] = piece.new([rank, file], color, false)
+      self[[rank, file]] = piece.new(self, [rank, file], color, false)
     end
   end
 
@@ -42,7 +42,8 @@ class Board
   end
 
   def empty?(position)
-    @grid[position] == NullPiece
+    rank, file = position
+    self[[rank, file]] == NullPiece
   end
 
   def [](position)
@@ -61,8 +62,10 @@ class Board
     piece = self[start]
     if color != piece.color
       raise "Move your own piece"
+    end
     if !piece.legal_moves.include?(fin)
       raise "Illegal Move"
+    end
     # if !piece.check?(fin)
     #   raise "Cannot move into Check"
     move!(start, fin)
