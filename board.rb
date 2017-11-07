@@ -58,16 +58,29 @@ class Board
     @grid[rank][file] = piece
   end
 
+  def pieces
+    @grid.flatten.reject(&:empty?)
+  end
+
+  def fetch_king(color)
+    pieces.find { |piece| piece.color == color && piece.class == King }
+  end
+
+  def in_check?(color)
+    pieces.any? { |piece| piece.color != color && piece.moves.include?(fetch_king(color).position) }
+  end
+
   def move(color, start, fin)
     piece = self[start]
     if color != piece.color
       raise "Move your own piece"
     end
     if !piece.moves.include?(fin)
-      raise "Illegal Move"
+      raise "#{piece.class} doesn't move like that."
     end
-    # if !piece.check?(fin)
-    #   raise "Cannot move into Check"
+    if !piece.reject_moves_into_check.include?(fin)
+      raise "That move puts you in check."
+    end
     move!(start, fin)
   end
 

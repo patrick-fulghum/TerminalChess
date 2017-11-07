@@ -21,6 +21,16 @@ class Piece
   def on_board?(location)
     location.all?{ |pos| pos.between?(0, 7) }
   end
+
+  def move_into_check?(fin)
+    fake_board = board.dup
+    fake_board.move!(position, fin)
+    fake_board.in_check?(color)
+  end
+
+  def reject_moves_into_check
+    moves.reject{ |move| move_into_check?(move) }
+  end
 end
 
 module SmoothMovement
