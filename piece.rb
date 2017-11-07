@@ -121,6 +121,14 @@ class Pawn < Piece
 
 end
 
+class NullPiece < Piece
+  include Singleton
+  def initialize(board, position, color = nil, moved = false)
+    super(position, color)
+    @display_value = '  '
+  end
+end
+
 
 
 

@@ -11,6 +11,7 @@ class Board
       Board.muster_pawns(color)
       Board.muster_pieces(color)
     end
+    Board.muster_void
   end
 
   def self.muster_pawns(color)
