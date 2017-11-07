@@ -78,6 +78,3 @@ class Cursor
     nil
   end
 end
-
-
-  end

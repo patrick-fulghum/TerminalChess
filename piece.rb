@@ -10,18 +10,16 @@ QUEEN_KING = ROOK + BISHOP
 class Piece
   attr_accessor :color, :position, :moved, :display_value
 
-  def initialize(board, position, color = nil, moved = false)
-    @board = board
+  def initialize(position, color = nil, moved = false)
     @position = position
     @color = color
     @moved = moved
   end
 end
-
+#
 module SmoothMovement
 
   def terminus(starting_pos, direction)
-    until @board
   end
 
   def legal_moves(directions)
@@ -39,23 +37,23 @@ module JumpingMovement
   end
 end
 
-class Rook < Piece
-  include SmoothMovement
-  def initialize(board, position, color = nil, moved = false)
-    super(board, position, color)
-    @display_value = color == :white ? "\u2656" : "\u265C"
-  end
+  class Rook < Piece
+    include SmoothMovement
+    def initialize(board, position, color = nil, moved = false)
+      super(board, position, color)
+      @display_value = color == :white ? "\u2656" : "\u265C"
+    end
 
-  def moves
-    legal_moves(ROOK)
+    def moves
+      legal_moves(ROOK)
+    end
   end
-end
 
 
 class Knight < Piece
   include JumpingMovement
-  def initialize(board, position, color = nil, moved = false)
-    super(board, position, color)
+  def initialize(position, color = nil, moved = false)
+    super(position, color)
     @display_value = color == :white ? "\u2658" : "\u265E"
   end
 
@@ -64,10 +62,10 @@ class Knight < Piece
   end
 end
 
-class Bishop
+class Bishop < Piece
   include SmoothMovement
-  def initialize(board, position, color = nil, moved = false)
-    super(board, position, color)
+  def initialize(position, color = nil, moved = false)
+    super(position, color)
     @display_value = color == :white ? "\u2657" : "\u265D"
   end
 
@@ -78,8 +76,8 @@ end
 
 class Queen < Piece
   include SmoothMovement
-  def initialize(board, position, color = nil, moved = false)
-    super(board, position, color)
+  def initialize(position, color = nil, moved = false)
+    super(position, color)
     @display_value = color == :white ? "\u2655" : "\u265B"
   end
 
@@ -90,8 +88,8 @@ end
 
 class King < Piece
   include JumpingMovement
-  def initialize(board, position, color = nil, moved = false)
-    super(board, position, color)
+  def initialize(position, color = nil, moved = false)
+    super(position, color)
     @display_value = color == :white ?  "\u2654" : "\u265A"
   end
 
@@ -101,8 +99,8 @@ class King < Piece
 end
 
 class Pawn < Piece
-  def initialize(board, position, color = nil, moved = false)
-    super(board, position, color)
+  def initialize(position, color = nil, moved = false)
+    super(position, color)
     @display_value = color == :white ? "\u2659" : "\u265F"
     rank, file = position
   end
@@ -123,9 +121,13 @@ end
 
 class NullPiece < Piece
   include Singleton
-  def initialize(board, position, color = nil, moved = false)
-    super(position, color)
+  def initialize
     @display_value = '  '
+    @color = nil
+  end
+
+  def moves
+    []
   end
 end
 

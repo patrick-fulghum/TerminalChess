@@ -14,30 +14,29 @@ class Display
   def determine_coloring(position, piece)
     if position == @cursor.cursor_pos
       if piece.class == NullPiece
-        print " #{piece.display_value} "
-        .colorize(background: :red)
+        print " #{piece.display_value} ".colorize(background: :red)
       else
-        position.reduce(:+) % 2 == 0 ?
-        print " #{piece.display_value}  "
-        .colorize(color: :red, background: :cyan) :
-        print " #{piece.display_value}  "
-        .colorize(color: :red, background: :yellow)
+        if position.reduce(:+) % 2 == 0
+          print " #{piece.display_value}  ".colorize(color: :red, background: :cyan)
+        else
+          print " #{piece.display_value}  ".colorize(color: :red, background: :yellow)
+        end
       end
     else
       if piece.class == NullPiece
-        position.reduce(:+) % 2 == 0 ?
-        print " #{piece.display_value} "
-        .colorize(background: :cyan) :
-        print " #{piece.display_value} "
-        .colorize(background: :yellow)
+        if position.reduce(:+) % 2 == 0
+          print " #{piece.display_value} ".colorize(background: :cyan)
+        else
+          print " #{piece.display_value} ".colorize(background: :yellow)
+        end
       else
-        position.reduce(:+) % 2 == 0 ?
-        print " #{piece.display_value} "
-        .colorize(color: piece.color, background: :cyan) :
-        print " #{piece.display_value} "
-        .colorize(color: piece.color, background: :yellow)
+        if position.reduce(:+) % 2 == 0
+          print " #{piece.display_value}  ".colorize(color: piece.color, background: :cyan)
+        else
+          print " #{piece.display_value}  ".colorize(color: piece.color, background: :yellow)
+        end
       end
-
+    end
   end
 
   def render
@@ -52,3 +51,8 @@ class Display
     end
     puts "   0   1   2   3   4   5   6   7"
   end
+end
+
+my_board = Board.new
+d = Display.new(my_board)
+d.render

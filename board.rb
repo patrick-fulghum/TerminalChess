@@ -8,29 +8,32 @@ class Board
   def initialize
     @grid = Array.new(8) { Array.new(8) }
     %i(black, white).each do |color|
-      Board.muster_pawns(color)
-      Board.muster_pieces(color)
+      muster_pawns(color)
+      muster_pieces(color)
     end
-    Board.muster_void
+    muster_void
+    debugger
   end
 
-  def self.muster_pawns(color)
+  def muster_pawns(color)
     rank = color == :white ? 6 : 1
-    8.times { |file| Pawn.new(self, [rank, file], color, false)
+    8.times do |file|
+      self[[rank, file]] = Pawn.new([rank, file], color, false)
+    end
   end
 
-  def self.muster_pieces(color)
+  def muster_pieces(color)
     rank = color == :white ? 7 : 0
     back_rank = [Rook, Knight, Bishop, Queen, King, Bishop, Knight, Rook]
     back_rank.each_with_index do |piece, file|
-      piece.new(self, [rank, file], color, false)
+      self[[rank, file]] = piece.new([rank, file], color, false)
     end
   end
 
-  def self.muster_void
+  def muster_void
     4.times do |rank|
       8.times do |file|
-        NullPiece.instance(self, [rank + 2, file], color = nil, moved = false)
+        self[[rank + 2, file]] = NullPiece.instance
       end
     end
   end
@@ -54,3 +57,4 @@ class Board
     rank, file = position
     @grid[rank][file] = piece
   end
+end
