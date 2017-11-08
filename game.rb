@@ -35,18 +35,17 @@ class Game
   end
 
   def ensure_promotion
-    self.board.grid.first.each_with_index do |chess_piece, file|
+    board.grid.first.each_with_index do |chess_piece, file|
       if chess_piece.class == Pawn
         position = [0, file]
-        self.board[position] = Queen.new(self.board, position, :white, true)
+        board[position] = Queen.new(self.board, position, :white, true)
       end
     end
 
-    self.board.grid.last.each_with_index do |chess_piece, file|
+    board.grid.last.each_with_index do |chess_piece, file|
       if chess_piece.class == Pawn
         position = [7, file]
-        debugger
-        self.board[position] = Queen.new(self.board, position, :black, true)
+        board[position] = Queen.new(self.board, position, :black, true)
       end
     end
   end
