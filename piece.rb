@@ -81,17 +81,17 @@ module JumpingMovement
   end
 end
 
-  class Rook < Piece
-    include SmoothMovement
-    def initialize(board, position, color = nil, moved = false)
-      super(board, position, color)
-      @display_value = color == :white ? "\u2656" : "\u265C"
-    end
-
-    def moves
-      legal_moves(ROOK)
-    end
+class Rook < Piece
+  include SmoothMovement
+  def initialize(board, position, color = nil, moved = false)
+    super(board, position, color)
+    @display_value = color == :white ? "\u2656" : "\u265C"
   end
+
+  def moves
+    legal_moves(ROOK)
+  end
+end
 
 
 class Knight < Piece
@@ -155,6 +155,19 @@ class Pawn < Piece
   def attacks
     [[position[0] + advances, position[1] - 1], [position[0] + advances, position[1] + 1]]
   end
+
+  def en_passant
+  #En passant (from French: in passing) is a move in chess.[1]
+  #It is a special pawn capture that can only occur
+  #immediately after a pawn makes a double-step move from its starting square,
+  #and it could have been captured by an enemy pawn had it advanced only one square.
+  #The opponent captures the just-moved pawn "as it passes" through the first square.
+  #The result is the same as if the pawn had advanced only one square
+  #and the enemy pawn had captured it normally.
+  #The en passant capture must be made on the very next turn or the right to do so is lost.
+  end
+
+
 
   def moves
     legal_moves = []

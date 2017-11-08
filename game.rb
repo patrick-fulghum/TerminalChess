@@ -19,7 +19,7 @@ class Game
       begin
         start, fin = @players[@current_player].move(@board)
         @board.move(@current_player, start, fin)
-        swap
+        swapachino
       rescue StandardError => e
         puts e.message
         sleep(1)
@@ -32,7 +32,7 @@ class Game
     nil
   end
 
-  def swap
+  def swapachino
     @current_player = @current_player == :white ? :black : :white
   end
 end
