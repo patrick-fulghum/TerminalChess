@@ -30,7 +30,9 @@ class Game
     end
 
     display.render
-    puts "Game Over."
+    swapachino
+    puts "Game Over, #{@current_player} wins!"
+    sleep(10)
     nil
   end
 

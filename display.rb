@@ -39,16 +39,19 @@ class Display
     end
   end
 
+  RANK = ['H','G','F','E','D','C','B','A']
+
   def render
     system('clear')
-    puts "   0   1   2   3   4   5   6   7"
+    puts "   1   2   3   4   5   6   7   8"
     board.grid.length.times do |rank|
-      print "#{rank} "
+      print "#{RANK[rank]} "
       board.grid[rank].each_with_index do |piece, file|
         determine_coloring([rank, file], piece)
       end
+      print " #{RANK[rank]} "
       puts ""
     end
-    puts "   0   1   2   3   4   5   6   7"
+    puts "   1   2   3   4   5   6   7   8"
   end
 end
