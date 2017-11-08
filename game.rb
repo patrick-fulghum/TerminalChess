@@ -1,4 +1,5 @@
 require 'byebug'
+require_relative 'test_board.rb'
 require_relative 'board.rb'
 require_relative 'human.rb'
 
@@ -33,17 +34,19 @@ class Game
     nil
   end
 
-  #Make all pawns turn into Queens if they are on the last rank.
   def ensure_promotion
     self.board.grid.first.each_with_index do |chess_piece, file|
       if chess_piece.class == Pawn
-        self.board.grid.first[file] = Queen.new(self.board, [0, file], :black, true)
+        position = [0, file]
+        self.board[position] = Queen.new(self.board, position, :white, true)
       end
     end
 
     self.board.grid.last.each_with_index do |chess_piece, file|
       if chess_piece.class == Pawn
-        self.board.grid.first[file] = Queen.new(self.board, [0, file], :white, true)
+        position = [7, file]
+        debugger
+        self.board[position] = Queen.new(self.board, position, :black, true)
       end
     end
   end
