@@ -28,9 +28,11 @@ In order to actively user this repository to play chess with yourself in your te
 
 1. Clone this repository
 2. Navigate to the repository in your terminal
-3. Run the following in your terminal:
+3. Run the following in your terminal if you don't have the colorize gem installed:
+bundle install
+4. Run the following in your terminal:
 ruby game.rb
-4. Use the left, right, up and down keys to move the cursor.
+5. Use the left, right, up and down keys to move the cursor.
 Use enter to select a piece, and enter again to select its destination. Errors will flash if you choose a piece that is not your own, try to move a piece in an illegal way, or fail to move out of check.
 
 ## Issues
