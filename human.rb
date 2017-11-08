@@ -4,15 +4,15 @@ require 'byebug'
 
 class Human < Player
   def move(board)
-    start, fin = nil, nil
-    until start && fin
+    start, final = nil, nil
+    until start && final
       display.render
       if start
-        fin = display.cursor.get_input
+        final = display.cursor.get_input
       else
         start = display.cursor.get_input
       end
     end
-    [start, fin]
+    [start, final]
   end
 end

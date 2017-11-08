@@ -18,12 +18,18 @@ class Piece
     @moved = moved
   end
 
+  def empty?
+    rank, file = position
+    return self.class if self.class == NullPiece
+    @board[[rank, file]].class == NullPiece
+  end
+
   def on_board?(location)
     location.all?{ |pos| pos.between?(0, 7) }
   end
 
   def move_into_check?(fin)
-    fake_board = board.dup
+    fake_board = Marshal.load(Marshal.dump(board))
     fake_board.move!(position, fin)
     fake_board.in_check?(color)
   end

@@ -3,6 +3,7 @@ require_relative 'board.rb'
 require_relative 'human.rb'
 
 class Game
+  attr_accessor :board, :display, :players, :current_player
   def initialize
     @board = Board.new
     @display = Display.new(@board)
@@ -14,15 +15,15 @@ class Game
   end
 
   def play
-    while true
+    until @board.checkmate?(@current_player)
       begin
         start, fin = @players[@current_player].move(@board)
         @board.move(@current_player, start, fin)
         swap
-      # rescue StandardError => e
-      #   debugger
-      #   puts "Invalid Move, try again."
-      #   retry
+      rescue StandardError => e
+        puts e.message
+        sleep(1)
+        retry
       end
     end
 

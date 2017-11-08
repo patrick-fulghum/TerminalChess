@@ -70,25 +70,31 @@ class Board
     pieces.any? { |piece| piece.color != color && piece.moves.include?(fetch_king(color).position) }
   end
 
-  def move(color, start, fin)
+  def move(color, start, final)
     piece = self[start]
     if color != piece.color
       raise "Move your own piece"
     end
-    if !piece.moves.include?(fin)
+    if !piece.moves.include?(final)
       raise "#{piece.class} doesn't move like that."
     end
-    if !piece.reject_moves_into_check.include?(fin)
+    if !piece.reject_moves_into_check.include?(final)
       raise "That move puts you in check."
     end
-    move!(start, fin)
+    move!(start, final)
   end
 
-  def move!(start, fin)
+  def move!(start, final)
     piece = self[start]
-    self[fin] = piece
+    self[final] = piece
     self[start] = NullPiece.instance
-    piece.moved, piece.position = true, fin
+    piece.moved, piece.position = true, final
     nil
+  end
+
+  def checkmate?(color)
+    return false unless in_check?(color)
+    my_pieces = pieces.select{ |piece| piece.color == color }
+    my_pieces.all?{ |piece| piece.reject_moves_into_check.length == 0 }
   end
 end
