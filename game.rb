@@ -19,6 +19,7 @@ class Game
       begin
         start, fin = @players[@current_player].move(@board)
         @board.move(@current_player, start, fin)
+        ensure_promotion
         swapachino
       rescue StandardError => e
         puts e.message
@@ -30,6 +31,21 @@ class Game
     display.render
     puts "Game Over."
     nil
+  end
+
+  #Make all pawns turn into Queens if they are on the last rank.
+  def ensure_promotion
+    self.board.grid.first.each_with_index do |chess_piece, file|
+      if chess_piece.class == Pawn
+        self.board.grid.first[file] = Queen.new(self.board, [0, file], :black, true)
+      end
+    end
+
+    self.board.grid.last.each_with_index do |chess_piece, file|
+      if chess_piece.class == Pawn
+        self.board.grid.first[file] = Queen.new(self.board, [0, file], :white, true)
+      end
+    end
   end
 
   def swapachino
