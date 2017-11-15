@@ -30,6 +30,10 @@ class Piece
 
   def move_into_check?(fin)
     fake_board = Marshal.load(Marshal.dump(board))
+    if fin == []
+      debugger
+      "kappa"
+    end
     fake_board.move!(position, fin)
     fake_board.in_check?(color)
   end
@@ -137,8 +141,36 @@ class King < Piece
     @display_value = color == :white ?  "\u2654" : "\u265A"
   end
 
+  def castling
+    rank = position[0]
+    file = position[1]
+    castle_maneuvers = []
+    if !moved
+      kings_rooks = board.pieces.find_all do |rook|
+        rook.class == Rook && rook.color == color && rook.moved == false
+      end
+      kings_rooks.each do |rooky|
+        rook_file = rooky.position[1]
+        if rook_file == 0
+          if (rook_file + 1...file).all?{ |f| board.empty?([rank, f]) }
+            unless move_into_check?([rank, 3]) || move_into_check?([rank, 2])
+              castle_maneuvers += [rank, 2]
+            end
+          end
+        else
+          if (file + 1...rook_file).all?{ |f| board.empty?([rank, f]) }
+            unless move_into_check?([rank, 5]) || move_into_check?([rank, 6])
+              castle_maneuvers += [rank, 6]
+            end
+          end
+        end
+      end
+    end
+    [castle_maneuvers]
+  end
+
   def moves
-    legal_moves(QUEEN_KING)
+    (legal_moves(QUEEN_KING)+ castling).reject{ |m| m == [] }
   end
 end
 

@@ -1,5 +1,4 @@
 require 'byebug'
-require_relative 'test_board.rb'
 require_relative 'board.rb'
 require_relative 'human.rb'
 
@@ -37,17 +36,10 @@ class Game
   end
 
   def ensure_promotion
-    board.grid.first.each_with_index do |chess_piece, file|
-      if chess_piece.class == Pawn
-        position = [0, file]
-        board[position] = Queen.new(self.board, position, :white, true)
-      end
-    end
-
-    board.grid.last.each_with_index do |chess_piece, file|
-      if chess_piece.class == Pawn
-        position = [7, file]
-        board[position] = Queen.new(self.board, position, :black, true)
+    (board.grid.first + board.grid.last).each_with_index do |piece, file|
+      if piece.class == Pawn
+        position = file < 8 ? [0, file] : [7, file % 8]
+        board[position] = Queen.new(board, position, piece.color, true)
       end
     end
   end

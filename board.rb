@@ -63,7 +63,10 @@ class Board
   end
 
   def in_check?(color)
-    pieces.any? { |piece| piece.color != color && piece.moves.include?(fetch_king(color).position) }
+    pieces.any? do |piece|
+      next if fetch_king(color).nil?
+      piece.color != color && piece.moves.include?(fetch_king(color).position)
+    end
   end
 
   def move(color, start, final)
@@ -81,10 +84,31 @@ class Board
   end
 
   def move!(start, final)
+    # if final == []
+    #   debugger
+    #   "kappa"
+    # end
     piece = self[start]
-    self[final] = piece
-    self[start] = NullPiece.instance
-    piece.moved, piece.position = true, final
+    if piece.class == King && (final[1] - start[1] > 1)
+      self[final] = piece
+      self[start] = NullPiece.instance
+      piece.moved, piece.position = true, final
+      if final == 1
+        rook_start_position = [start[0], 0]
+        rook_final_position = [start[0], 3]
+      else
+        rook_start_position = [start[0], 7]
+        rook_final_position = [start[0], 5]
+      end
+      rook = self[rook_start_position]
+      self[rook_final_position] = rook
+      self[rook_start_position] = NullPiece.instance
+      rook.moved, rook.position = true, rook_final_position
+    else
+      self[final] = piece
+      self[start] = NullPiece.instance
+      piece.moved, piece.position = true, final
+    end
     nil
   end
 
