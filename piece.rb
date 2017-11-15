@@ -30,10 +30,6 @@ class Piece
 
   def move_into_check?(fin)
     fake_board = Marshal.load(Marshal.dump(board))
-    if fin == []
-      debugger
-      "kappa"
-    end
     fake_board.move!(position, fin)
     fake_board.in_check?(color)
   end
@@ -170,7 +166,7 @@ class King < Piece
   end
 
   def moves
-    (legal_moves(QUEEN_KING)+ castling).reject{ |m| m == [] }
+    (legal_moves(QUEEN_KING)+ castling).reject{ |m| m == []}
   end
 end
 
