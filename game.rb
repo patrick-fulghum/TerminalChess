@@ -28,7 +28,7 @@ class Game
         retry
       end
     end
-    display.render
+    display.render(nil)
     swapachino
     puts "Game Over, #{@current_player} wins!"
     sleep(10)

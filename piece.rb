@@ -224,7 +224,7 @@ end
 class NullPiece < Piece
   include Singleton
   def initialize
-    @display_value = '  '
+    @display_value = ' '
     @color = nil
   end
 
