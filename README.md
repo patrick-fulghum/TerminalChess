@@ -39,7 +39,4 @@ Use enter to select a piece, and enter again to select its destination. Errors w
 
 * You cannot choose what piece to promote to; any pawn that makes it to the end of the board is automatically promoted to a Queen.
 
-* Fifty Move Rule, 3 move repetition and the capacity to offer a draw to
-your opponent
-
-* Does not highlight the available squares for a piece when selected
+* Fifty Move Rule, 3 move repetition and the capacity to offer and accept a draw are not implemented.

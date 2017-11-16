@@ -1,6 +1,7 @@
 require 'byebug'
 require_relative 'board.rb'
 require_relative 'human.rb'
+require_relative 'hal.rb'
 
 class Game
   attr_accessor :board, :display, :players, :current_player
