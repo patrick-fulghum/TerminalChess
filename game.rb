@@ -20,6 +20,7 @@ class Game
         start, fin = @players[@current_player].move(@board)
         @board.move(@current_player, start, fin)
         ensure_promotion
+        handle_en_passant
         swapachino
       rescue StandardError => e
         puts e.message
@@ -29,14 +30,15 @@ class Game
     end
     display.render
     swapachino
-    handle_en_passant
     puts "Game Over, #{@current_player} wins!"
     sleep(10)
     nil
   end
 
   def handle_en_passant
-    pawns = @board.pieces.find_all{ |pawn| pawn.color = @current_player.color }
+    pawns = @board.pieces.find_all{ |pawn| pawn.class == Pawn }.reject do |pwn|
+      pwn.color == @current_player
+    end
     pawns.each { |pawn| pawn.pass = false }
   end
 

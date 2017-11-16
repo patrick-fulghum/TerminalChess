@@ -98,7 +98,7 @@ class Board
       self[final] = piece
       self[start] = NullPiece.instance
       piece.moved, piece.position = true, final
-      if final == 1
+      if final[1] == 2
         rook_start_position = [start[0], 0]
         rook_final_position = [start[0], 3]
       else

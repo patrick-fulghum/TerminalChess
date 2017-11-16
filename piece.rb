@@ -192,12 +192,12 @@ class Pawn < Piece
     pos1 = board[[position[0], position[1] + 1]] if position[1] < 7
     pos2 = board[[position[0], position[1] - 1]] if position[1] > 0
     if pos1.class == Pawn
-      if @pass
+      if pos1.pass
         passing_moves += [position[0] + advances, position[1] + 1]
       end
     end
     if pos2.class == Pawn
-      if @pass
+      if pos2.pass
         passing_moves += [position[0] + advances, position[1] - 1]
       end
     end
