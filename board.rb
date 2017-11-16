@@ -75,6 +75,7 @@ class Board
       raise "Move your own piece"
     end
     if !piece.moves.include?(final)
+      debugger
       raise "#{piece.class} doesn't move like that."
     end
     if !piece.reject_moves_into_check.include?(final)
@@ -84,12 +85,17 @@ class Board
   end
 
   def move!(start, final)
-    # if final == []
-    #   debugger
-    #   "kappa"
-    # end
     piece = self[start]
-    if piece.class == King && (final[1] - start[1] > 1)
+    if piece.class == Pawn && self[final].class == NullPiece && start[1] != final[1]
+      enemy_pawn = [start[0], final[1]]
+      self[enemy_pawn] = NullPiece.instance
+      self[final] = piece
+    end
+
+    if piece.class == Pawn && (((final[0] - start[0]) ** 2) ** 0.5).to_i > 1
+      piece.pass = true
+    end
+    if piece.class == King && (((final[1] - start[1]) ** 2) ** 0.5).to_i > 1
       self[final] = piece
       self[start] = NullPiece.instance
       piece.moved, piece.position = true, final

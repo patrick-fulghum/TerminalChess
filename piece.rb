@@ -171,8 +171,11 @@ class King < Piece
 end
 
 class Pawn < Piece
+  attr_accessor :pass
+
   def initialize(board, position, color = nil, moved = false)
     super(board, position, color)
+    @pass = false
     @display_value = color == :white ? "\u2659" : "\u265F"
   end
 
@@ -185,17 +188,21 @@ class Pawn < Piece
   end
 
   def en_passant
-  #En passant (from French: in passing) is a move in chess.[1]
-  #It is a special pawn capture that can only occur
-  #immediately after a pawn makes a double-step move from its starting square,
-  #and it could have been captured by an enemy pawn had it advanced only one square.
-  #The opponent captures the just-moved pawn "as it passes" through the first square.
-  #The result is the same as if the pawn had advanced only one square
-  #and the enemy pawn had captured it normally.
-  #The en passant capture must be made on the very next turn or the right to do so is lost.
+    passing_moves = []
+    pos1 = board[[position[0], position[1] + 1]] if position[1] < 7
+    pos2 = board[[position[0], position[1] - 1]] if position[1] > 0
+    if pos1.class == Pawn
+      if @pass
+        passing_moves += [position[0] + advances, position[1] + 1]
+      end
+    end
+    if pos2.class == Pawn
+      if @pass
+        passing_moves += [position[0] + advances, position[1] - 1]
+      end
+    end
+    [passing_moves]
   end
-
-
 
   def moves
     legal_moves = []
@@ -210,7 +217,7 @@ class Pawn < Piece
         legal_moves << pos
       end
     end
-    legal_moves
+    (legal_moves + en_passant).reject{ |m| m == []}
   end
 end
 

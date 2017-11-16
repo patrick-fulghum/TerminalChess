@@ -27,12 +27,17 @@ class Game
         retry
       end
     end
-
     display.render
     swapachino
+    handle_en_passant
     puts "Game Over, #{@current_player} wins!"
     sleep(10)
     nil
+  end
+
+  def handle_en_passant
+    pawns = @board.pieces.find_all{ |pawn| pawn.color = @current_player.color }
+    pawns.each { |pawn| pawn.pass = false }
   end
 
   def ensure_promotion
