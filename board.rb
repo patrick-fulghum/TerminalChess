@@ -58,6 +58,20 @@ class Board
     @grid.flatten.reject(&:empty?)
   end
 
+  def pieces_of(color)
+    pieces.select{ |p1| p1.color == color }
+  end
+
+  def legal_moves_of(color)
+    moveachinos = []
+    pieces_of(color).each do |p2|
+      p2.moves.each do |move|
+        moveachinos << [p2.position, move]
+      end
+    end
+    moveachinos
+  end
+
   def fetch_king(color)
     pieces.find { |piece| piece.color == color && piece.class == King }
   end
