@@ -75,7 +75,6 @@ class Board
       raise "Move your own piece"
     end
     if !piece.moves.include?(final)
-      debugger
       raise "#{piece.class} doesn't move like that."
     end
     if !piece.reject_moves_into_check.include?(final)
