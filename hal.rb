@@ -20,12 +20,12 @@ class Hal < Player
 
   def values
     {
-      "Queen" => 10,
-      "Rook" => 5,
-      "Knight" => 3,
-      "Bishop" => 3.25,
-      "Pawn" => 1,
-      "King" => 90
+      Queen => 10,
+      Rook => 5,
+      Knight => 3,
+      Bishop => 3.25,
+      Pawn => 1,
+      King => 90
     }
   end
 
@@ -33,10 +33,10 @@ class Hal < Player
     black_sum = 0
     white_sum = 0
     this_board.pieces_of(:black).each do |piece|
-      black_sum += values[piece.class.to_s]
+      black_sum += values[piece.class]
     end
     this_board.pieces_of(:white).each do |piece|
-      white_sum += values[piece.class.to_s]
+      white_sum += values[piece.class]
     end
     white_sum - black_sum
   end
