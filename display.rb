@@ -54,7 +54,7 @@ class Display
     @selectedPosition = selectedPosition
     @pieces_moves = []
     if !selectedPosition.nil?
-      @board[selectedPosition].moves.each do |move|
+      @board[selectedPosition].reject_moves_into_check.each do |move|
         @pieces_moves += [move]
       end
     end

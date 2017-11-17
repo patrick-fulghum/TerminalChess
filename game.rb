@@ -24,8 +24,10 @@ class Game
         handle_en_passant
         swapachino
       rescue StandardError => e
-        puts e.message
-        sleep(1)
+        if @players[@current_player].class == Human
+          puts e.message
+          sleep(1)
+        end
         retry
       end
     end
