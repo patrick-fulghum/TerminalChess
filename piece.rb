@@ -206,15 +206,17 @@ class Pawn < Piece
 
   def moves
     legal_moves = []
-    if board.empty?([position[0] + advances, position[1]])
-      legal_moves << [position[0] + advances, position[1]]
-      if moved == false && board.empty?([position[0] + advances * 2, position[1]])
-        legal_moves << [position[0] + advances * 2, position[1]]
+    if position.all?{ |n| n.between?(1, 6)}
+      if board.empty?([position[0] + advances, position[1]])
+        legal_moves << [position[0] + advances, position[1]]
+        if moved == false && board.empty?([position[0] + advances * 2, position[1]])
+          legal_moves << [position[0] + advances * 2, position[1]]
+        end
       end
-    end
-    attacks.each do |pos|
-      if on_board?(pos) && board[pos].color != color && !board.empty?(pos)
-        legal_moves << pos
+      attacks.each do |pos|
+        if on_board?(pos) && board[pos].color != color && !board.empty?(pos)
+          legal_moves << pos
+        end
       end
     end
     (legal_moves + en_passant).reject{ |m| m == []}

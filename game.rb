@@ -10,7 +10,7 @@ class Game
     @display = Display.new(@board)
     @players = {
       white: Human.new(@display, :white),
-      black: Hal.new(@display, :black)
+      black: Human.new(@display, :black)
     }
     @current_player = :white
   end
@@ -18,9 +18,10 @@ class Game
   def play
     until @board.checkmate?(@current_player)
       begin
-        start, fin = @players[@current_player].move(@board)
-        # @capture = @board[fin].is_a?(NullPiece) ? false : true
-        @board.move(@current_player, start, fin)
+        start, finalachino = @players[@current_player].move(@board)
+        # @capture = @board[finalachino].is_a?(NullPiece) ? false : true
+        @board.move(@current_player, start, finalachino)
+        @board.print_board(finalachino)
         ensure_promotion
         handle_en_passant
         swapachino

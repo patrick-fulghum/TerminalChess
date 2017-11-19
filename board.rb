@@ -34,12 +34,16 @@ class Board
   end
 
   def [](position)
-    raise 'off Board' unless on_board?(position)
+    unless on_board?(position)
+      raise 'off Board'
+    end
     rank, file = position
     @grid[rank][file]
   end
   def []=(position, piece)
-    raise 'off Board' unless on_board?(position)
+    unless on_board?(position)
+      raise 'off Board'
+    end
     rank, file = position
     @grid[rank][file] = piece
   end
@@ -104,7 +108,6 @@ class Board
       self[enemy_pawn] = NullPiece.instance
       self[final] = piece
     end
-
     if piece.class == Pawn && (((final[0] - start[0]) ** 2) ** 0.5).to_i > 1
       piece.pass = true
     end
@@ -131,8 +134,8 @@ class Board
     nil
   end
 
-  def print_board
-    Display.new(self).render([0,0])
+  def print_board(fin)
+    Display.new(self).render(fin)
   end
 
   def checkmate?(color)
