@@ -10,41 +10,31 @@ class Game
     @display = Display.new(@board)
     @players = {
       white: Human.new(@display, :white),
-      black: Human.new(@display, :black)
+      black: Hal.new(@display, :black)
     }
     @current_player = :white
-    @game_state = {
-      last_four_move_sequences: [],
-      threefold_repition: 0,
-      fifty_move_rule: 0,
-    }
   end
 
   def play
-    until @board.checkmate?(@current_player) || self.draw?
+    until @board.checkmate?(@current_player)
       begin
         start, fin = @players[@current_player].move(@board)
-        @capture = @board[fin].is_a?(NullPiece) ? false : true
+        # @capture = @board[fin].is_a?(NullPiece) ? false : true
         @board.move(@current_player, start, fin)
-        update_state(start, fin)
         ensure_promotion
         handle_en_passant
         swapachino
       rescue StandardError => e
         if @players[@current_player].class == Human
           puts e.message
-          sleep(1)
+          sleep(0.5)
         end
         retry
       end
     end
     display.render(nil)
     swapachino
-    if draw?
-      puts "Game Over, It's a Draw by threefold repition."
-    else
-      puts "Game Over, #{@current_player} wins!"
-    end
+    puts "Game Over, #{@current_player} wins!"
     sleep(10)
     nil
   end
@@ -63,31 +53,6 @@ class Game
         board[position] = Queen.new(board, position, piece.color, true)
       end
     end
-  end
-
-  def update_state(start, fin)
-    @game_state[:last_four_move_sequences].push([start, fin])
-    if @game_state[:last_four_move_sequences].length > 4
-      @game_state[:last_four_move_sequences].shift
-      if @game_state[:last_four_move_sequences][0] == @game_state[:last_four_move_sequences][2].reverse && @game_state[:last_four_move_sequences][1] == @game_state[:last_four_move_sequences][3].reverse
-        @game_state[:threefold_repition] += 1
-      else
-        @game_state[:threefold_repition] = 0
-      end
-      debugger
-    end
-    if @capture
-      @game_state[:fifty_move_rule] = 0
-    else
-      @game_state[:fifty_move_rule] += 1
-    end
-  end
-
-  def draw?
-    if @game_state[:threefold_repition] > 2 || @game_state[:fifty_move_rule] > 50
-      return true
-    end
-    false
   end
 
   def swapachino
