@@ -131,6 +131,10 @@ class Board
     nil
   end
 
+  def print_board
+    Display.new(self).render([0,0])
+  end
+
   def checkmate?(color)
     return false unless in_check?(color)
     my_pieces = pieces.select{ |piece| piece.color == color }

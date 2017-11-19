@@ -1,13 +1,16 @@
 require_relative 'player.rb'
 require_relative 'board.rb'
 require 'byebug'
-DEFAULT_VALUES = {
+require 'ruby-prof'
+
+MATERIAL_VALUES = {
   Queen => 900,
   Rook => 500,
   Knight => 300,
   Bishop => 325,
   Pawn => 100,
-  King => 9000
+  King => 9000,
+  NullPiece => 0
 }
 
 POSITIONAL_VALUES = {
@@ -75,26 +78,36 @@ POSITIONAL_VALUES = {
       [-20,-30,-30,-40,-40,-30,-30,-20],
       [-10,-20,-20,-20,-20,-20,-20,-10],
       [20, 20,  0,  0,  0,  0, 20, 20],
-      [20, 30, 10,  0,  0, 10, 30, 20]
+      [20, 30, 30,  0,  0, 10, 30, 20]
     ]
 }
 
 class Hal < Player
   def move(board)
+    # RubyProf.start
     @board = board
-    @current_min = 99
+    #Alpha is the maximum lower bound
+    @alpha = -9999
+    #Beta is the minimum upper bound
+    @beta = 9999
     best_move = []
+    move_valuations = {}
     @board.legal_moves_of(:black).shuffle.each do |move_sequence|
-      moves_value = minimax(1, move_sequence, @board)
-      if moves_value < @current_min
-        @current_min = moves_value
+      moves_value = minimax(1, move_sequence, @board, @alpha, @beta)
+      move_valuations[move_sequence] = moves_value
+      if moves_value < @beta
+        @beta = moves_value
         best_move = move_sequence
       end
     end
+    # result = RubyProf.stop
+    # printer = RubyProf::FlatPrinter.new(result)
+    # printer.print(STDOUT)
+    print move_valuations
     best_move
   end
 
-  def minimax(depth, sequence, board)
+  def minimax(depth, sequence, board, alpha, beta)
     if depth == 0
       return calculate_move(sequence, board)
     end
@@ -108,7 +121,7 @@ class Hal < Player
         piece.moves.each do |move|
           current_sequence = [sequence[1], move]
           evaluation = minimax(depth - 1, current_sequence, fake_board)
-          black_min = evaluation < black_min ? black_min : evaluation
+          black_min = evaluation < black_min ? evaluation : black_min
         end
       end
       return black_min
@@ -118,7 +131,7 @@ class Hal < Player
         piece.moves.each do |move|
           current_sequence = [sequence[1], move]
           evaluation = minimax(depth - 1, current_sequence, fake_board)
-          white_max = evaluation > white_max ? white_max : evaluation
+          white_max = evaluation > white_max ? evaluation : white_max
         end
       end
       return white_max
@@ -129,14 +142,28 @@ class Hal < Player
     black_sum = 0
     white_sum = 0
     this_board.pieces_of(:black).each do |piece|
-      debugger
-      black_sum += DEFAULT_VALUES[piece.class]
+      value_literal = MATERIAL_VALUES[piece.class]
+      value_positional = (POSITIONAL_VALUES[piece.class][7 - piece.position[0]][7 - piece.position[1]])
+      black_sum += value_literal + value_positional
     end
     this_board.pieces_of(:white).each do |piece|
-      white_sum += DEFAULT_VALUES[piece.class]
+      value_literal = MATERIAL_VALUES[piece.class]
+      value_positional = POSITIONAL_VALUES[piece.class][piece.position[0]][piece.position[1]]
+      white_sum += value_literal + value_positional
     end
     white_sum - black_sum
   end
+
+  # def calculate_move_without_marshal(sequence, this_board)
+  #   piece_type = this_board[sequence[0]].class
+  #   conquered_piece_type = this_board[sequence[1]].class
+  #   positional_diffing =
+  #   POSITIONAL_VALUES[piece_type][sequence[0][0]][sequence[0][1]] -
+  #   POSITIONAL_VALUES[piece_type][sequence[1][0]][sequence[0][1]]
+  #   value_material = MATERIAL_VALUES[conquered_piece_type]
+  #   starting_value = evaluate_position(this_board)
+  #   debugger
+  # end
 
   def calculate_move(sequence, this_board)
     fake_board = Marshal.load(Marshal.dump(this_board))
