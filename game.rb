@@ -9,8 +9,8 @@ class Game
     @board = Board.new
     @display = Display.new(@board)
     @players = {
-      white: Human.new(@display, :white),
-      black: Human.new(@display, :black)
+      white: Hal.new(@display, :white),
+      black: Hal.new(@display, :black)
     }
     @current_player = :white
   end
@@ -21,9 +21,9 @@ class Game
         start, finalachino = @players[@current_player].move(@board)
         # @capture = @board[finalachino].is_a?(NullPiece) ? false : true
         @board.move(@current_player, start, finalachino)
-        @board.print_board(finalachino)
         ensure_promotion
         handle_en_passant
+        @board.print_board(finalachino)
         swapachino
       rescue StandardError => e
         if @players[@current_player].class == Human

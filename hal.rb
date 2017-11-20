@@ -88,9 +88,9 @@ class Hal < Player
     @board = board
     start = Time.now
     #Alpha is the maximum lower bound
-    alpha = -9999
+    alpha = -99999
     #Beta is the minimum upper bound
-    beta = 9999
+    beta = 99999
     best_move = []
     current_move = []
     move_valuations = {}
@@ -113,7 +113,7 @@ class Hal < Player
     # printer = RubyProf::FlatPrinter.new(result)
     # printer.print(STDOUT)
     print Time.now - start
-    best_move || current_move
+    best_move
   end
 
   def minimax(depth, sequence, board, alpha, beta)
