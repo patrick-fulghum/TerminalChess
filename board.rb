@@ -59,7 +59,7 @@ class Board
 
 
   def pieces
-    @grid.flatten.reject(&:empty?)
+    @grid.flatten.reject{ |piece| piece.class == NullPiece }
   end
 
   def pieces_of(color)

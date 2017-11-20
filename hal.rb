@@ -84,9 +84,9 @@ POSITIONAL_VALUES = {
 
 class Hal < Player
   def move(board)
-    # RubyProf.start
+    RubyProf.start
     @board = board
-    # start = Time.now
+    start = Time.now
     #Alpha is the maximum lower bound
     alpha = -99999
     #Beta is the minimum upper bound
@@ -96,7 +96,7 @@ class Hal < Player
     move_valuations = {}
     @board.legal_moves_of(color).shuffle.each do |move_sequence|
       current_move = move_sequence
-      moves_value = minimax(0, move_sequence, @board, alpha, beta)
+      moves_value = minimax(1, move_sequence, @board, alpha, beta)
       if color == :white
         if moves_value > alpha
           best_move = move_sequence
@@ -109,10 +109,10 @@ class Hal < Player
         end
       end
     end
-    # result = RubyProf.stop
-    # printer = RubyProf::FlatPrinter.new(result)
-    # printer.print(STDOUT)
-    # print Time.now - start
+    result = RubyProf.stop
+    printer = RubyProf::FlatPrinter.new(result)
+    printer.print(STDOUT)
+    print Time.now - start
     best_move
   end
 

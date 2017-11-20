@@ -18,12 +18,6 @@ class Piece
     @moved = moved
   end
 
-  def empty?
-    rank, file = position
-    return self.class if self.class == NullPiece
-    @board[[rank, file]].class == NullPiece
-  end
-
   def on_board?(location)
     location.all?{ |pos| pos.between?(0, 7) }
   end
