@@ -86,7 +86,7 @@ class Hal < Player
   def move(board)
     # RubyProf.start
     @board = board
-    start = Time.now
+    # start = Time.now
     #Alpha is the maximum lower bound
     alpha = -99999
     #Beta is the minimum upper bound
@@ -112,7 +112,7 @@ class Hal < Player
     # result = RubyProf.stop
     # printer = RubyProf::FlatPrinter.new(result)
     # printer.print(STDOUT)
-    print Time.now - start
+    # print Time.now - start
     best_move
   end
 

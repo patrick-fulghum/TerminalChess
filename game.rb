@@ -13,14 +13,23 @@ class Game
       black: Hal.new(@display, :black)
     }
     @current_player = :white
+    initial_board = Marshal.load(Marshal.dump(board))
+    @game_state = {
+      boards: [],
+      threefold: 1,
+      fifty_move: 1,
+      insufficient_material: false,
+    }
+    @game_state[:boards].push(initial_board)
   end
 
   def play
-    until @board.checkmate?(@current_player)
+    until @board.checkmate?(@current_player) || self.draw?
       begin
         start, finalachino = @players[@current_player].move(@board)
-        # @capture = @board[finalachino].is_a?(NullPiece) ? false : true
+        @capture = @board[finalachino].is_a?(NullPiece) ? false : true
         @board.move(@current_player, start, finalachino)
+        update_state(@board)
         ensure_promotion
         handle_en_passant
         @board.print_board(finalachino)
@@ -35,9 +44,42 @@ class Game
     end
     display.render(nil)
     swapachino
-    puts "Game Over, #{@current_player} wins!"
+    if self.draw?
+      if @game_state[:threefold] > 2
+        puts "Game Over, it's a draw by threefold repetition!"
+      elsif @game_state[:fifty_move] > 50
+        puts "Game Over, it's a draw by the fifty move rule!"
+      else
+        puts "Game Over, it's a draw due to insufficient material!"
+      end
+    else
+      puts "Game Over, #{@current_player} wins!"
+    end
     sleep(10)
     nil
+  end
+
+  def draw?
+    if @game_state[:threefold] > 2 || @game_state[:fifty_move] > 50 || @game_state[:insufficient_material]
+      return true
+    end
+    false
+  end
+
+  def update_state(board)
+    @game_state[:threefold] = 1
+    current_board = Marshal.load(Marshal.dump(board))
+    @game_state[:boards].each do |game_board|
+      if game_board == board
+        @game_state[:threefold] += 1
+      end
+    end
+    if @capture
+      @game_state[:fifty_move] = 0
+    else
+      @game_state[:fifty_move] += 1
+    end
+    @game_state[:boards].push(current_board)
   end
 
   def handle_en_passant

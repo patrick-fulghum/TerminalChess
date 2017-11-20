@@ -69,7 +69,7 @@ class Board
   def legal_moves_of(color)
     moveachinos = []
     pieces_of(color).each do |p2|
-      p2.moves.each do |move|
+      p2.reject_moves_into_check.each do |move|
         moveachinos << [p2.position, move]
       end
     end
