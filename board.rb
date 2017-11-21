@@ -69,7 +69,7 @@ class Board
   def legal_moves_of(color)
     moveachinos = []
     pieces_of(color).each do |p2|
-      p2.reject_moves_into_check.each do |move|
+      p2.moves.each do |move|
         moveachinos << [p2.position, move]
       end
     end
@@ -142,5 +142,10 @@ class Board
     return false unless in_check?(color)
     my_pieces = pieces.select{ |piece| piece.color == color }
     my_pieces.all?{ |piece| piece.reject_moves_into_check.length == 0 }
+  end
+
+  def stalemate?(color)
+    my_pieces = pieces.select{ |piece| piece.color == color }
+    my_pieces.all?{ |piece| piece.reject_moves_into_check.length == 0 } && !in_check?(color)
   end
 end

@@ -94,9 +94,11 @@ class Hal < Player
     best_move = []
     current_move = []
     move_valuations = {}
+    depth = rand(1)
+    print depth
     @board.legal_moves_of(color).shuffle.each do |move_sequence|
       current_move = move_sequence
-      moves_value = minimax(1, move_sequence, @board, alpha, beta)
+      moves_value = minimax(0, move_sequence, @board, alpha, beta)
       if color == :white
         if moves_value > alpha
           best_move = move_sequence
@@ -108,11 +110,38 @@ class Hal < Player
           beta = moves_value
         end
       end
+      if Time.now - start > 15
+        break
+      end
+      move_valuations[move_sequence] = moves_value
     end
     result = RubyProf.stop
     printer = RubyProf::FlatPrinter.new(result)
-    printer.print(STDOUT)
+    # printer.print(STDOUT)
     print Time.now - start
+    while true
+      if color == :white
+        fake_board = Marshal.load(Marshal.dump(board))
+        best_move = move_valuations.max_by { |a, b| b }[0]
+        fake_board.move!(best_move[0], best_move[1])
+        if fake_board.in_check?(color)
+          fake_board = nil
+          move_valuations[best_move] = -99999
+        else
+          break
+        end
+      else
+        fake_board = Marshal.load(Marshal.dump(board))
+        best_move = move_valuations.min_by { |a, b| b }[0]
+        fake_board.move!(best_move[0], best_move[1])
+        if fake_board.in_check?(color)
+          fake_board = nil
+          move_valuations[best_move] = 99999
+        else
+          break
+        end
+      end
+    end
     best_move
   end
 

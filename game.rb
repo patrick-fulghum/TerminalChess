@@ -24,7 +24,7 @@ class Game
   end
 
   def play
-    until @board.checkmate?(@current_player) || self.draw?
+    until @board.checkmate?(@current_player) || self.draw? || @board.stalemate?(@current_player)
       begin
         start, finalachino = @players[@current_player].move(@board)
         @capture = @board[finalachino].is_a?(NullPiece) ? false : true
@@ -44,16 +44,20 @@ class Game
     end
     display.render(nil)
     swapachino
-    if self.draw?
-      if @game_state[:threefold] > 2
-        puts "Game Over, it's a draw by threefold repetition!"
-      elsif @game_state[:fifty_move] > 50
-        puts "Game Over, it's a draw by the fifty move rule!"
-      else
-        puts "Game Over, it's a draw due to insufficient material!"
-      end
+    if @board.stalemate?(@current_player)
+      puts "Game Over, it's a draw by Stalemate!"
     else
-      puts "Game Over, #{@current_player} wins!"
+      if self.draw?
+        if @game_state[:threefold] > 2
+          puts "Game Over, it's a draw by threefold repetition!"
+        elsif @game_state[:fifty_move] > 50
+          puts "Game Over, it's a draw by the fifty move rule!"
+        else
+          puts "Game Over, it's a draw due to insufficient material!"
+        end
+      else
+        puts "Game Over, #{@current_player} wins!"
+      end
     end
     sleep(10)
     nil
