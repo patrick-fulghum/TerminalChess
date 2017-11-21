@@ -82,20 +82,39 @@ POSITIONAL_VALUES = {
     ]
 }
 
+LATE_GAME = {
+  King => [
+    [-50,-40,-30,-20,-20,-30,-40,-50],
+    [-30,-20,-10,  0,  0,-10,-20,-30],
+    [-30,-10, 20, 30, 30, 20,-10,-30],
+    [-30,-10, 30, 40, 40, 30,-10,-30],
+    [-30,-10, 30, 40, 40, 30,-10,-30],
+    [-30,-10, 20, 30, 30, 20,-10,-30],
+    [-30,-30,  0,  0,  0,  0,-30,-30],
+    [-50,-30,-30,-30,-30,-30,-30,-50]
+  ],
+  Pawn => [
+    [300,  300,  300,  300,  300,  300,  300,  300],
+    [100, 100, 100, 100, 100, 100, 100, 100],
+    [80, 80, 80, 80, 80, 80, 80, 80],
+    [60, 60, 60, 60, 60, 60, 60, 60],
+    [40, 40, 40, 40, 40, 40, 40, 40],
+    [20, 20, 20, 20, 20, 20, 20, 20],
+    [0,  0,  0,  0,  0,  0,  0,  0],
+    [0,  0,  0,  0,  0,  0,  0,  0]
+  ]
+}
+
 class Hal < Player
   def move(board)
-    RubyProf.start
+    # RubyProf.start
     @board = board
     start = Time.now
-    #Alpha is the maximum lower bound
     alpha = -99999
-    #Beta is the minimum upper bound
     beta = 99999
     best_move = []
     current_move = []
     move_valuations = {}
-    depth = rand(1)
-    print depth
     @board.legal_moves_of(color).shuffle.each do |move_sequence|
       current_move = move_sequence
       moves_value = minimax(0, move_sequence, @board, alpha, beta)
@@ -115,10 +134,9 @@ class Hal < Player
       end
       move_valuations[move_sequence] = moves_value
     end
-    result = RubyProf.stop
-    printer = RubyProf::FlatPrinter.new(result)
+    # result = RubyProf.stop
+    # printer = RubyProf::FlatPrinter.new(result)
     # printer.print(STDOUT)
-    print Time.now - start
     while true
       if color == :white
         fake_board = Marshal.load(Marshal.dump(board))
@@ -171,15 +189,31 @@ class Hal < Player
     white_sum = 0
     this_board.pieces_of(:black).each do |piece|
       value_literal = MATERIAL_VALUES[piece.class]
-      value_positional = (POSITIONAL_VALUES[piece.class][7 - piece.position[0]][7 - piece.position[1]])
+      if basic_eval(:black, this_board) < 10100 && (piece.class == King || piece.class == Pawn)
+        value_positional = LATE_GAME[piece.class][7 - piece.position[0]][7 - piece.position[1]]
+      else
+        value_positional = POSITIONAL_VALUES[piece.class][7 - piece.position[0]][7 - piece.position[1]]
+      end
       black_sum += value_literal + value_positional
     end
     this_board.pieces_of(:white).each do |piece|
       value_literal = MATERIAL_VALUES[piece.class]
-      value_positional = POSITIONAL_VALUES[piece.class][piece.position[0]][piece.position[1]]
+      if basic_eval(:white, this_board) < 10100 && (piece.class == King || piece.class == Pawn)
+        value_positional = LATE_GAME[piece.class][piece.position[0]][piece.position[1]]
+      else
+        value_positional = POSITIONAL_VALUES[piece.class][piece.position[0]][piece.position[1]]
+      end
       white_sum += value_literal + value_positional
     end
     white_sum - black_sum
+  end
+
+  def basic_eval(color, this_board)
+    value_literal = 0
+    this_board.pieces_of(color).each do |piece|
+      value_literal += MATERIAL_VALUES[piece.class]
+    end
+    value_literal
   end
 
   def calculate_move(sequence, this_board)

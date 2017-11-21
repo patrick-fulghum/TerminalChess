@@ -46,6 +46,7 @@ class Game
     swapachino
     if @board.stalemate?(@current_player)
       puts "Game Over, it's a draw by Stalemate!"
+      return "draw"
     else
       if self.draw?
         if @game_state[:threefold] > 2
@@ -55,12 +56,12 @@ class Game
         else
           puts "Game Over, it's a draw due to insufficient material!"
         end
+        return "draw"
       else
         puts "Game Over, #{@current_player} wins!"
       end
     end
-    sleep(10)
-    nil
+    @current_player
   end
 
   def draw?

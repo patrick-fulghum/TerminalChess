@@ -143,13 +143,13 @@ class King < Piece
         rook_file = rooky.position[1]
         if rook_file == 0
           if (rook_file + 1...file).all?{ |f| board.empty?([rank, f]) }
-            unless move_into_check?([rank, 3]) || move_into_check?([rank, 2]) || board.in_check?(color)
+            unless move_into_check?([rank, 3]) || move_into_check?([rank, 2])
               castle_maneuvers += [rank, 2]
             end
           end
         else
           if (file + 1...rook_file).all?{ |f| board.empty?([rank, f]) }
-            unless move_into_check?([rank, 5]) || move_into_check?([rank, 6]) || board.in_check?(color)
+            unless move_into_check?([rank, 5]) || move_into_check?([rank, 6])
               castle_maneuvers += [rank, 6]
             end
           end
