@@ -66,3 +66,11 @@ bundle install
 ruby game.rb
 5. Use the left, right, up and down keys to move the cursor.
 Use enter to select a piece, and enter again to select its destination. Errors will flash if you choose a piece that is not your own, try to move a piece in an illegal way, or fail to move out of check.
+
+## Issues
+
+* Computer AI level cannot be chosen by user, it must be adjusted in the source code.
+
+* Selecting to do Human vs Human, Human vs Computer, or Computer vs Computer must similarly be adjusted in the source code.
+
+* Due to redundant iterations, Minimax with Alpha Beta Pruning cannot realistically search moves beyond 2 or 3 levels deep, resulting in a weak computer AI.
