@@ -33,6 +33,14 @@ class Board
     end
   end
 
+  def slaughter
+    8.times do |rank|
+      8.times do |file|
+        self[[rank, file]] = NullPiece.instance
+      end
+    end
+  end
+
   def [](position)
     unless on_board?(position)
       raise 'off Board'

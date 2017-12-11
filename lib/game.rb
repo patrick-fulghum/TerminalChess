@@ -8,10 +8,36 @@ class Game
   def initialize
     @board = Board.new
     @display = Display.new(@board)
-    @players = {
-      white: Hal.new(@display, :white),
-      black: Hal.new(@display, :black)
-    }
+    puts "Hey human! See the following options:
+    1) Human vs Human
+    2) Human vs Computer
+    3) Computer vs Human
+    4) Computer vs Computer"
+    input = gets.chomp
+    case input
+    when "1"
+      @players = {
+        white: Human.new(@display, :white),
+        black: Human.new(@display, :black)
+      }
+    when "2"
+      @players = {
+        white: Human.new(@display, :white),
+        black: Hal.new(@display, :black)
+      }
+    when "3"
+      @players = {
+        white: Hal.new(@display, :white),
+        black: Human.new(@display, :black)
+      }
+    when "4"
+      @players = {
+        white: Hal.new(@display, :white),
+        black: Hal.new(@display, :black)
+      }
+    else
+      puts "No game for you, invalid input."
+    end
     @current_player = :white
     initial_board = Marshal.load(Marshal.dump(board))
     @game_state = {

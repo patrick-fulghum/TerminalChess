@@ -117,7 +117,7 @@ class Hal < Player
     move_valuations = {}
     @board.legal_moves_of(color).shuffle.each do |move_sequence|
       current_move = move_sequence
-      moves_value = minimax(0, move_sequence, @board, alpha, beta)
+      moves_value = minimax(2, move_sequence, @board, alpha, beta)
       if color == :white
         if moves_value > alpha
           best_move = move_sequence
